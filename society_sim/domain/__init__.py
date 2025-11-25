@@ -9,6 +9,7 @@ from society_sim.domain.company import Company
 from society_sim.domain.enums import EventType, IdeologicalBias, Sector
 from society_sim.domain.event import Event, EventEffect
 from society_sim.domain.party import Party
+from society_sim.domain.policy import Policy, PolicyEffect
 
 __all__ = [
     "CitizenSegment",
@@ -18,5 +19,7 @@ __all__ = [
     "EventType",
     "IdeologicalBias",
     "Party",
+    "Policy",
+    "PolicyEffect",
     "Sector",
 ]
