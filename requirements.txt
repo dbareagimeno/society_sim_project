@@ -1,0 +1,36 @@
+# SocietySim - Dependencies
+# Python 3.10+ required
+
+# ─────────────────────────────────────────────────────────────
+# Core dependencies
+# ─────────────────────────────────────────────────────────────
+
+# Data models with validation and JSON serialization
+pydantic>=2.5
+
+# Beautiful CLI output and logging
+rich>=13.7
+
+# CLI framework (integrates seamlessly with rich)
+typer>=0.9
+
+# ─────────────────────────────────────────────────────────────
+# Testing
+# ─────────────────────────────────────────────────────────────
+pytest>=7.4
+
+# ─────────────────────────────────────────────────────────────
+# Future extensions (uncomment when needed)
+# ─────────────────────────────────────────────────────────────
+
+# LLM integration (Epic 6)
+# httpx>=0.25           # Async HTTP client for LLM API calls
+# openai>=1.0           # If using OpenAI API
+
+# API HTTP (future extension)
+# fastapi>=0.104
+# uvicorn>=0.24
+
+# BI / Dashboard (future extension)
+# pandas>=2.1
+# plotly>=5.18
