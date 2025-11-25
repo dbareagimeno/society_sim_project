@@ -44,3 +44,4 @@ Thumbs.db
 # Project docs (auto-generated or managed separately)
 docs/epicas_e_historias_usuario.md
 docs/historias_detalladas.md
+.cursorignore
