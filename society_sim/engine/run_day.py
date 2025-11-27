@@ -17,6 +17,7 @@ Example:
     1
 """
 
+from society_sim.domain.summary import CompanySummary, DaySummary, PartySummary
 from society_sim.domain.world_state import WorldState
 
 
@@ -114,14 +115,77 @@ def _record_summary_phase(world: WorldState) -> WorldState:
     Esta fase calcula métricas agregadas del día y las añade
     al historial para análisis posterior.
 
+    Métricas calculadas:
+        - total_revenue: Suma de ingresos de todas las empresas
+        - average_stock_price: Media de precios de acciones
+        - average_satisfaction: Media ponderada por tamaño de satisfacción ciudadana
+
     Args:
         world: Estado actual del mundo.
 
     Returns:
         WorldState con el resumen del día añadido a `history`.
     """
-    # Stub: implementación pendiente en US-2.2
-    return world
+    # Calcular métricas agregadas de empresas
+    total_revenue = sum(company.last_day_revenue for company in world.companies)
+
+    if world.companies:
+        average_stock_price = sum(
+            company.stock_price for company in world.companies
+        ) / len(world.companies)
+    else:
+        average_stock_price = 0.0
+
+    # Calcular satisfacción media ponderada por tamaño de segmentos
+    total_population = sum(segment.size for segment in world.citizen_segments)
+    if total_population > 0:
+        average_satisfaction = sum(
+            segment.satisfaction * segment.size for segment in world.citizen_segments
+        ) / total_population
+    else:
+        average_satisfaction = 0.0
+
+    # Crear PartySummary para cada partido
+    party_summaries = [
+        PartySummary(
+            party_id=party.id,
+            name=party.name,
+            popularity=party.popularity,
+            reputation=party.reputation,
+        )
+        for party in world.parties
+    ]
+
+    # Crear CompanySummary para las top 5 empresas por revenue
+    sorted_companies = sorted(
+        world.companies, key=lambda c: c.last_day_revenue, reverse=True
+    )
+    top_companies = [
+        CompanySummary(
+            company_id=company.id,
+            name=company.name,
+            stock_price=company.stock_price,
+            reputation=company.reputation,
+            revenue=company.last_day_revenue,
+        )
+        for company in sorted_companies[:5]
+    ]
+
+    # Crear el resumen del día
+    day_summary = DaySummary(
+        day=world.day,
+        total_revenue=total_revenue,
+        average_stock_price=average_stock_price,
+        average_satisfaction=average_satisfaction,
+        parties=party_summaries,
+        top_companies=top_companies,
+        events_count=len(world.events_today),
+        active_policies_count=len(world.active_policies),
+    )
+
+    # Añadir al historial
+    new_history = list(world.history) + [day_summary]
+    return world.model_copy(update={"history": new_history})
 
 
 def run_day(world: WorldState) -> WorldState:
